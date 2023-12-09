@@ -1,8 +1,13 @@
+import { useDispatch, useSelector } from "react-redux";
+import { removeTodo } from "../slices/todoSlice";
+
 function Todos() {
-  const todos = [];
+  const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+
   return (
     <>
-      <div>Todos</div>
+      <div className="mt-4">Todos</div>
       <ul className="list-none">
         {todos.map((todo) => (
           <li
@@ -11,7 +16,9 @@ function Todos() {
           >
             <div className="text-white">{todo.text}</div>
             <button
-              onClick={() => {}}
+              onClick={() => {
+                dispatch(removeTodo(todo.id));
+              }}
               className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md"
             >
               <svg
