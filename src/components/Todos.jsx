@@ -1,9 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeTodo } from "../slices/todoSlice";
+import { removeTodo, updateTodo } from "../slices/todoSlice";
+import { useState } from "react";
 
 function Todos() {
   const todos = useSelector((state) => state.todos);
+  const [input, setInput] = useState("");
+  const [isInputVisible, setIsInputVisible] = useState(false);
   const dispatch = useDispatch();
+
+  function handleOnTodoClick() {
+    setIsInputVisible(!isInputVisible);
+  }
+
+  function updateTodoHandler(event, id) {
+    event.preventDefault();
+    dispatch(updateTodo({ id: id, text: input }));
+    setInput("");
+    handleOnTodoClick();
+  }
 
   return (
     <>
@@ -14,7 +28,26 @@ function Todos() {
             className="mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded"
             key={todo.id}
           >
-            <div className="text-white">{todo.text}</div>
+            {isInputVisible ? (
+              <form
+                onSubmit={(event) => {
+                  updateTodoHandler(event, todo.id);
+                }}
+                className="space-x-3"
+              >
+                <input
+                  type="text"
+                  className="bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  placeholder="Enter a Todo..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+              </form>
+            ) : (
+              <div className="text-white" onClick={handleOnTodoClick}>
+                {todo.text}
+              </div>
+            )}
             <button
               onClick={() => {
                 dispatch(removeTodo(todo.id));
