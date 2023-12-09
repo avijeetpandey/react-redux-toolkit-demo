@@ -64,3 +64,10 @@ const addTodoHandler = (e) => {
 const todos = useSelector((state) => state.todos);
 const dispatch = useDispatch();
 ```
+
+**In order to run the application**
+
+- `yarn` - to install dependencies
+- `yarn dev` - to run the server
+
+This demo creates a basic todo app to understand working of redux toolkit
