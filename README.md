@@ -9,3 +9,58 @@ A repository to demonstrate usage of redux toolkit with react and javascript , w
 ## Evolution
 
 `Flow` ==> `Redux` ==> `React-Redux` (binding for react using react) ==> `Redux tool kit`
+
+### Working
+
+In order to work with redux tool kit there are following steps
+
+- create a store with `configureStore` and register the reducer
+- create a slice/ reducer that will basically hold the logic on what to do
+
+```js
+import { createSlice, nanoid } from "@reduxjs/toolkit";
+
+const initialState = {
+  todos: [{ id: 1, text: "Hello world" }]
+};
+
+export const todoSlice = createSlice({
+  name: "todo",
+  initialState,
+  reducers: {
+    addTodo: (state, action) => {
+      const todo = { id: nanoid(), text: action?.payload };
+      state.todos.push(todo);
+    },
+    removeTodo: (state, action) => {
+      state.todos = state.todos.filter((todo) => action.payload !== todo.id);
+    }
+  }
+});
+
+export const { addTodo, removeTodo } = todoSlice.actions;
+
+export default todoSlice.reducer;
+```
+
+- use hooks like `useSelector` and `useDispatch` to select the state and manipulate the state
+
+```js
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../slices/todoSlice";
+
+const [input, setInput] = useState("");
+const dispatch = useDispatch();
+
+const addTodoHandler = (e) => {
+  e.preventDefault();
+  dispatch(addTodo(input));
+  setInput("");
+};
+```
+
+```js
+const todos = useSelector((state) => state.todos);
+const dispatch = useDispatch();
+```
